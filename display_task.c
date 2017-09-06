@@ -518,7 +518,106 @@ void display_small_text(void){
 				dog_write_mid_strings(NEW_POSITION(5,0), line3,line4);
 				break;
 			}
-			
+			case STARTSTOP:{
+				/*	0123456789012345
+		     Status
+					----------------
+					123kmh  1200upm  	
+					 XXX  XXX  XXX  
+					et85gc	12gC
+					AC:OFF	12,34V
+				*/  
+				/*
+				switch(status){
+					case START:{		//	012345678901
+						strcpy(status_str, "   START    ");
+						break;
+					}
+					case STOP:{
+						strcpy(status_str, "   STOP     ");
+						break;
+					}
+					case FAHRT:{
+						strcpy(status_str, "   FAHRT    ");
+						break;
+					}
+					case MOTOR_AUS:{
+						strcpy(status_str, " MOTOR AUS  ");
+						break;
+					}
+					case DEAKTIVIERT:{
+						strcpy(status_str, "DEAKTIVIERT ");
+						break;
+					}
+				}
+				*/
+				char line1[17] = "                "; 
+				char line2[17] = "                ";
+				char line3[17] = "                ";
+				char line4[17] = "                ";
+				dog_set_position(2,0);
+				
+				sprint_cur_speed(&line1[1], speed[CUR]);
+				line1[4] = KMH;
+				line1[5] = KMH + 1;
+				
+				uint16_to_string(&line1[7], rpm);
+				line1[12] = RPM;
+				line1[13] = RPM + 1;
+	
+				//	 01234567890123456
+				//	" XXX  XXX  XXX  "
+	
+				if(!(eng_status0 & CLUTCH)){
+					line2[1] = 'X';
+					line2[2] = 'X';
+					line2[3] = 'X';
+				}else{
+					line2[1] = '-';
+					line2[2] = '-';
+					line2[3] = '-';
+				}
+	
+				if(eng_status1 & BRAKE){
+					line2[6] = 'X';
+					line2[7] = 'X';
+					line2[8] = 'X';
+				}else{
+					line2[6] = '-';
+					line2[7] = '-';
+					line2[8] = '-';
+				}
+	
+				if(!(eng_status0 & THROTTLE)){
+					line2[11] = 'X';
+					line2[12] = 'X';
+					line2[13] = 'X';
+				}else{
+					line2[11] = '-';
+					line2[12] = '-';
+					line2[13] = '-';
+				}
+
+				dog_write_mid_strings(NEW_POSITION(2,0), line1,line2);
+	
+				line3[0] = ENGT;
+				line3[1] = ENGT + 1;
+				sprint_temperature(&line3[2],engine_temperature>25?engine_temperature:200);
+				line3[5] = CENTIGRADE;
+
+				sprint_temperature(&line3[10],ambient_temperature);
+				line3[13] = CENTIGRADE;
+
+				if(ambient_temperature < 4){
+					line3[8] = FROST;
+					line3[9] = FROST + 1;
+				}
+				//				01234567890123456
+				//				AC: OFF   12,34V 
+				sprintf(line4, "AC: %s   %2i,%02iV  ", (eng_status1 & AC)?"ON ":"OFF", starterbat.integer, starterbat.fraction);
+				dog_write_mid_strings(NEW_POSITION(5,0), line3,line4);
+				break;
+			}
 			default:{
 				display_value[SMALL_TEXT]=0;
 				break;

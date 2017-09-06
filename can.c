@@ -13,6 +13,7 @@ uint64_t can_speed_sum = 0;
 uint32_t can_speed_cnt = 0;			
 static volatile uint8_t can_irq = 0;
 void can_read_data(void);
+void can_send_data(void);
 
 uint16_t mob_id[16] = {
 	0x280, 
@@ -24,8 +25,8 @@ uint16_t mob_id[16] = {
 	0x520, 
 	0x5D0, 
 	0x5D8, 
-	0x7FF,
-	0x7FF,
+	0x666,
+	0x667,
 	0x7FF,
 	0x7FF,
 	0x7FF,
@@ -125,6 +126,9 @@ void can_init( void )
 		CANPAGE=i << 4;
 		CANSTMOB = 0 ;
 		CANCDMOB = (1<<CONMOB1) ;
+		if(i==ID666){
+			CANCDMOB = (1<<CONMOB0);
+		}
 	    can_normal_id ((uint16_t) mob_id[i], 0, 0) ;
 	    can_normal_id ((uint16_t) 2047, 0, 1) ;
 	}
@@ -161,6 +165,7 @@ void can_init( void )
 
 void can_task(void){
 	can_read_data();
+	can_send_data();
 	if(K15_PIN & (1<<K15)){
 		//read data
 		if(id280_valid){
@@ -212,6 +217,12 @@ void can_task(void){
 			can_status |= (1<<ID520);
 			id520_valid = 0;
 		}
+		if(id667_valid){
+			// [ 0 ] [ 1 ] [ 2 ] [ 3 ] [ 4 ] [ 5 ] [ 6 ] [ 7 ]
+			engine_cut = id667_data[0];
+			can_status |= (1<<ID667);
+			id667_valid = 0;
+		}
 	}
 }
 
@@ -221,6 +232,26 @@ uint16_t can_get_normal_id(){
 	return id;
 }
 
+void can_send_data(void){
+	uint8_t mob_number;
+	for(mob_number=0; mob_number<15; mob_number++){
+		if (check_mob_ready(mob_number)){
+			CANPAGE = (mob_number << 4);
+			if(CANCDMOB & (1<<CONMOB0)){
+				CANCDMOB &= 0xF0;
+				CANCDMOB |= 3;
+				uint16_t ID =can_get_normal_id();
+				if(ID==0x666){
+					CANPAGE &= (0xF8);
+					CANMSG = starterbat.integer;
+					CANMSG = starterbat.fraction;
+					CANMSG = (uint8_t) (ambient_temperature + 100);
+				}
+				id666_valid = 1;
+			}
+		}
+	}
+}
 
 void can_read_data(){
 	//if(can_irq){
@@ -287,6 +318,14 @@ void can_read_data(){
 							id520_data[i] = CANMSG;
 						}
 						id520_valid = 1;
+						break;
+					}
+					case 0x667:{
+						for(i=0; i<dlc; i++){
+							CANPAGE &= (0xF8 | i);
+							id667_data[i] = CANMSG;
+						}
+						id667_valid = 1;
 						break;
 					}
 					default:{

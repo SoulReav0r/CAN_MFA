@@ -58,6 +58,8 @@ volatile uint8_t id480_data[8];
 volatile uint8_t id320_data[8];
 volatile uint8_t id420_data[8];
 volatile uint8_t id520_data[8];
+volatile uint8_t id666_data[8];
+volatile uint8_t id667_data[8];
 
 volatile uint8_t id280_valid;
 volatile uint8_t id288_valid;
@@ -66,6 +68,8 @@ volatile uint8_t id480_valid;
 volatile uint8_t id320_valid;
 volatile uint8_t id420_valid;
 volatile uint8_t id520_valid;
+volatile uint8_t id666_valid;
+volatile uint8_t id667_valid;
 
 // values from can data
 volatile int16_t speed[2]; //0-317km/h
@@ -141,6 +145,7 @@ volatile uint16_t avg_timer;
 extern volatile uint16_t k58b_timer;
 volatile uint32_t cons_timer;
 volatile uint8_t can_status = 0x00;
+volatile uint8_t engine_cut;
 
 volatile uint8_t display_mode = 0;
 volatile uint8_t display_mode_tmp;

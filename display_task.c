@@ -224,13 +224,13 @@ void display_small_text(void){
 		case CAN_VALUES2:{
 			// status, gra,
 			//				 "0123456789012345"
-			char can_line2[22] = "                ";
-			//				 "0123456789012345"
-			char can_line3[22] = "                ";
-			char can_line4[22] = "                ";
-			char can_line5[22] = "                ";
-			
-			sprint_cur_speed(&can_line2[7],gra_speed * eeprom_read_byte(&cal_speed) * 10 / 128);
+			char can_line2[22] = "                 ";
+			//				     "01234567890123456"
+			char can_line3[22] = "                 ";
+			char can_line4[22] = "                 ";
+			char can_line5[22] = "                 ";
+
+			sprint_cur_speed(&can_line2[7],(gra_speed * 10 * eeprom_read_byte(&cal_speed)) / 128);
 			can_line2[11] = KMH;
 			can_line2[12] = KMH + 1;
 
@@ -241,8 +241,9 @@ void display_small_text(void){
 			can_line4[4] = 'L';
 			sprint_temperature(&can_line4[6],pedal_position);
 			can_line4[9] = '%'; //0xF8;
-
-			sprintf(&can_line5[2], "0x%02X 0x%02X    ", eng_status0, eng_status1 );
+             
+								//	012  345678  90123456
+			sprintf(&can_line5[0], "  0x%02X  0x%02X     ", eng_status0, eng_status1 );
 			
 			dog_write_mid_strings(NEW_POSITION(2,0),can_line2, can_line5);
 			dog_write_mid_strings(NEW_POSITION(5,0),can_line4, can_line3);
@@ -485,7 +486,7 @@ void display_small_text(void){
 
 				sprint_temperature(&line1[11], ambient_temperature);
 				
-				sprint_cur_speed(&line2[1], (uint16_t) speed);
+				sprint_cur_speed(&line2[1], (uint16_t) speed[CUR]);
 				line2[4] = KMH;
 				line2[5] = KMH + 1;
 				
@@ -600,10 +601,10 @@ void display_small_text(void){
 
 				dog_write_mid_strings(NEW_POSITION(2,0), line1,line2);
 	
-				line3[0] = ENGT;
-				line3[1] = ENGT + 1;
-				sprint_temperature(&line3[2],engine_temperature>25?engine_temperature:200);
-				line3[5] = CENTIGRADE;
+				line3[1] = ENGT;
+				line3[2] = ENGT + 1;
+				sprint_temperature(&line3[3],engine_temperature>25?engine_temperature:200);
+				line3[6] = CENTIGRADE;
 
 				sprint_temperature(&line3[10],ambient_temperature);
 				line3[13] = CENTIGRADE;
@@ -614,7 +615,7 @@ void display_small_text(void){
 				}
 				//				01234567890123456
 				//				AC: OFF   12,34V 
-				sprintf(line4, "AC: %s   %2i,%02iV  ", (eng_status1 & AC)?"ON ":"OFF", starterbat.integer, starterbat.fraction);
+				sprintf(line4, " AC: %s %2i,%02iV  ", (eng_status1 & AC)?"ON ":"OFF", starterbat.integer, starterbat.fraction);
 				dog_write_mid_strings(NEW_POSITION(5,0), line3,line4);
 				break;
 			}
@@ -1063,20 +1064,20 @@ void display_can_data(void){
 					}
 							
 					dog_set_position(3,8);
-					dog_write_tiny_string("xxx");
+					dog_write_tiny_string("666");
 							
 					for(i=0; i<8; i++){
-						sprintf(id, "%02X", 255);
+						sprintf(id, "%02X", id666_data[i]);
 								
 						dog_transmit_data(0x00);
 						dog_write_small_string(id);
 					}
 							
 					dog_set_position(4,8);
-					dog_write_tiny_string("xxx");
+					dog_write_tiny_string("667");
 							
 					for(i=0; i<8; i++){
-						sprintf(id, "%02X", 255);
+						sprintf(id, "%02X", id667_data[i]);
 								
 						dog_transmit_data(0x00);
 						dog_write_small_string(id);

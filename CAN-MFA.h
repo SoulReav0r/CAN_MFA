@@ -147,9 +147,9 @@
 #define VAL_RANGE 17 
 
 // display value small
-#define CAN_VALUES 0
+#define CAN_VALUES 2
 #define ADC_VALUES 1
-#define STANDARD_VALUES 2
+#define STANDARD_VALUES 0
 #define CAN_VALUES2 3
 #define MIN_MAX_VALUES 4
 #define TEMPERATURE_VALUES 5

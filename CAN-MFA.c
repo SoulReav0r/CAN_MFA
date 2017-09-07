@@ -554,6 +554,8 @@ int main(void){
 						id320_data[i] = 0;
 						id420_data[i] = 0;
 						id520_data[i] = 0;
+						id666_data[i] = 0;
+						id667_data[i] = 0;
 					}
 					id280_valid = 1;
 				}

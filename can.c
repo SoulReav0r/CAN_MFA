@@ -164,9 +164,10 @@ void can_init( void )
 }
 
 void can_task(void){
-	can_read_data();
-	can_send_data();
 	if(K15_PIN & (1<<K15)){
+		can_read_data();
+		can_send_data();
+	
 		//read data
 		if(id280_valid){
 			// [status] [ 1 ] [ 2 ] [rpm] [rpm] [ 5 ] [ pedal_position ] [ 7 ]
@@ -224,6 +225,21 @@ void can_task(void){
 			id667_valid = 0;
 		}
 	}
+	else
+	{
+		uint8_t i;
+		for(i=0;i<8;i++){
+			id280_data[i] = 0;
+			id288_data[i] = 0;
+			id380_data[i] = 0;
+			id480_data[i] = 0;
+			id320_data[i] = 0;
+			id420_data[i] = 0;
+			id520_data[i] = 0;
+			id666_data[i] = 0;
+			id667_data[i] = 0;
+		}
+	}
 }
 
 uint16_t can_get_normal_id(){
@@ -238,14 +254,22 @@ void can_send_data(void){
 		if (check_mob_ready(mob_number)){
 			CANPAGE = (mob_number << 4);
 			if(CANCDMOB & (1<<CONMOB0)){
-				CANCDMOB &= 0xF0;
-				CANCDMOB |= 3;
 				uint16_t ID =can_get_normal_id();
 				if(ID==0x666){
-					CANPAGE &= (0xF8);
+					CANCDMOB &= 0xF0;
+					CANCDMOB |= 3;
+
 					CANMSG = starterbat.integer;
+					id666_data[0] = starterbat.integer;
 					CANMSG = starterbat.fraction;
+					id666_data[1] = starterbat.fraction;
 					CANMSG = (uint8_t) (ambient_temperature + 100);
+					id666_data[1] = (uint8_t) (ambient_temperature + 100);
+					CANCDMOB |= ( 1 << CONMOB0 );
+
+					while ( ! ( CANSTMOB & ( 1 << TXOK ) ) );
+					CANCDMOB = 0x00;
+					CANSTMOB = 0x00;
 				}
 				id666_valid = 1;
 			}

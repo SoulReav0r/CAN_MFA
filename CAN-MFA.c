@@ -175,6 +175,8 @@ volatile uint16_t line5timer;
 volatile uint16_t line6timer;
 volatile uint16_t line7timer;
 */
+volatile uint8_t send_can_message;
+volatile uint8_t send_can_lock;
 
 volatile int16_t old_val = 0;
 volatile int16_t new_val = 0;
@@ -853,6 +855,10 @@ ISR(TIMER0_COMP_vect){//1ms timer
 		line_shift_timer += 5;
 		if(line_shift_timer > 0xFFF) line_shift_timer = 0;
 	}
+	if(send_can_lock < 20)
+		if(!(line_ms_timer % 100))
+			send_can_message = 1;
+
 
 }
 

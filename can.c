@@ -166,7 +166,10 @@ void can_init( void )
 void can_task(void){
 	if(K15_PIN & (1<<K15)){
 		can_read_data();
-		can_send_data();
+		if(send_can_message){
+			can_send_data();
+			send_can_message = 0;
+		}
 	
 		//read data
 		if(id280_valid){
@@ -250,6 +253,7 @@ uint16_t can_get_normal_id(){
 
 void can_send_data(void){
 	uint8_t mob_number;
+	uint8_t timeout = 0;
 	for(mob_number=0; mob_number<15; mob_number++){
 		if (check_mob_ready(mob_number)){
 			CANPAGE = (mob_number << 4);
@@ -267,7 +271,16 @@ void can_send_data(void){
 					id666_data[1] = (uint8_t) (ambient_temperature + 100);
 					CANCDMOB |= ( 1 << CONMOB0 );
 
-					while ( ! ( CANSTMOB & ( 1 << TXOK ) ) );
+					while ( ! ( CANSTMOB & ( 1 << TXOK ) ) ){
+						timeout++;
+						if (timeout > 100){
+							CANCDMOB = 0x00;
+							CANSTMOB = 0x00;
+							send_can_lock++;
+							return;
+						}
+						_delay_ms(5);
+					}
 					CANCDMOB = 0x00;
 					CANSTMOB = 0x00;
 				}

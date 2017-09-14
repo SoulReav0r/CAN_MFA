@@ -314,6 +314,8 @@ extern volatile uint16_t line5timer;
 extern volatile uint16_t line6timer;
 extern volatile uint16_t line7timer;
 */
+extern volatile uint8_t send_can_message;
+extern volatile uint8_t send_can_lock;
 
 extern volatile uint8_t reversed;
 extern volatile uint8_t underlined;

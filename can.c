@@ -252,11 +252,12 @@ uint16_t can_get_normal_id(){
 }
 
 void can_send_data(void){
-	uint8_t mob_number;
+	//return;
+//	uint8_t mob_number;
 	uint8_t timeout = 0;
-	for(mob_number=0; mob_number<15; mob_number++){
-		if (check_mob_ready(mob_number)){
-			CANPAGE = (mob_number << 4);
+//	for(mob_number=0; mob_number<15; mob_number++){
+		if (check_mob_ready(ID666 /*mob_number*/)){
+			CANPAGE = (ID666 /*mob_number*/ << 4);
 			if(CANCDMOB & (1<<CONMOB0)){
 				uint16_t ID =can_get_normal_id();
 				if(ID==0x666){
@@ -274,15 +275,13 @@ void can_send_data(void){
 					while ( ! ( CANSTMOB & ( 1 << TXOK ) ) ){
 						timeout++;
 						if (timeout > 100){
-							CANCDMOB = 0x00;
-							CANSTMOB = 0x00;
+							CANSTMOB &= ~(1<<TXOK);
 							send_can_lock++;
 							return;
 						}
 						_delay_ms(5);
 					}
-					CANCDMOB = 0x00;
-					CANSTMOB = 0x00;
+					CANSTMOB &= ~(1<<TXOK);
 				}
 				id666_valid = 1;
 			}

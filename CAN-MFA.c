@@ -195,10 +195,17 @@ void init_spi_lcd(void){
 }
 
 void enable_mfa_switch(void){
+#if MFA_BUTTONS_ACTIVE_LOW
 	MFA_SWITCH_DDR &= ~(1<<MFA_SWITCH_MFA) & ~(1<<MFA_SWITCH_MODE) & ~(1<<MFA_SWITCH_RES);
 	MFA_SWITCH_DDR |= (1<<MFA_SWITCH_GND);
 	MFA_SWITCH_PORT |= (1<<MFA_SWITCH_MFA) | (1<<MFA_SWITCH_MODE) | (1<<MFA_SWITCH_RES);
 	MFA_SWITCH_PORT &= ~(1<<MFA_SWITCH_GND);
+#else
+	MFA_SWITCH_DDR &= ~(1<<MFA_SWITCH_MFA) & ~(1<<MFA_SWITCH_MODE) & ~(1<<MFA_SWITCH_RES);
+	MFA_SWITCH_PORT &= ~(1<<MFA_SWITCH_MFA) & ~(1<<MFA_SWITCH_MODE) & ~(1<<MFA_SWITCH_RES);
+	MFA_SWITCH_DDR |= (1<<MFA_SWITCH_GND);
+	MFA_SWITCH_PORT |= (1<<MFA_SWITCH_GND);
+#endif
 }
 
 void disable_mfa_switch(void){
@@ -207,6 +214,14 @@ void disable_mfa_switch(void){
 	MFA_SWITCH_DDR &= ~(1<<MFA_SWITCH_GND);
 	MFA_SWITCH_PORT &= ~(1<<MFA_SWITCH_MFA) & ~(1<<MFA_SWITCH_MODE) & ~(1<<MFA_SWITCH_RES);
 	MFA_SWITCH_PORT &= ~(1<<MFA_SWITCH_GND);
+}
+
+static inline uint8_t read_mfa_switch(uint8_t button){
+#if MFA_BUTTONS_ACTIVE_LOW
+	return !(MFA_SWITCH_PIN & (1<<button));
+#else
+	return MFA_SWITCH_PIN & (1<<button);
+#endif
 }
 
 void reset_values(void){
@@ -527,7 +542,7 @@ int main(void){
 						break;
 					}
 
-					if(!(MFA_SWITCH_PIN & (1<<MFA_SWITCH_RES)) || !(MFA_SWITCH_PIN & (1<<MFA_SWITCH_MFA))){
+					if(read_mfa_switch(MFA_SWITCH_RES) || read_mfa_switch(MFA_SWITCH_MFA)){
 						_delay_ms(300);
 						button_irq = 255;
 						break;
@@ -742,13 +757,13 @@ void app_task(){
 			max_rpm = rpm;
 		}
 		
-		if(!(MFA_SWITCH_PIN & (1<<MFA_SWITCH_MODE))){
+		if(read_mfa_switch(MFA_SWITCH_MODE)){
 			mfa.mode = CUR;
 		}else{
 			mfa.mode = AVG;
 		}			
 
-		if(!(MFA_SWITCH_PIN & (1<<MFA_SWITCH_RES))){
+		if(read_mfa_switch(MFA_SWITCH_RES)){
 			//sprintf(radio_text, "%i           " ,mfa_res_cnt);
 			mfa.res = 1;
 			if(mfa.res == mfa_old.res){
@@ -787,7 +802,7 @@ void app_task(){
 				}
 			}
 		}
-		if(!(MFA_SWITCH_PIN & (1<<MFA_SWITCH_MFA))){
+		if(read_mfa_switch(MFA_SWITCH_MFA)){
 			mfa.mfa = 1;
 			if(mfa.mfa == mfa_old.mfa){
 				mfa_mfa_cnt++;

@@ -129,14 +129,13 @@ int16_t min_ambient_temp;
 volatile int16_t oil_temperature;
 int16_t max_oil_temp;
 int16_t min_oil_temp;
-uint8_t EEMEM cal_water_temperature;
+uint8_t EEMEM cal_ambient_temperature;
 uint8_t EEMEM cal_voltage;
 uint8_t EEMEM cal_speed;
 uint8_t EEMEM cal_oil_temperature;
 uint8_t EEMEM cal_in_temperature;
 uint8_t EEMEM cal_consumption;
 uint8_t EEMEM cal_gearbox_temperature;
-uint8_t EEMEM cal_ambient_temperature;
 uint8_t EEMEM cal_ambient_temperature;
 uint8_t cal_k15_delay EEMEM;
 uint8_t cal_k58b_off_val EEMEM;
@@ -708,7 +707,7 @@ void app_task(){
 		v_solar_plus = calculate_voltage(adc_value[SPANNUNG3]);
 		v_solar_minus = calculate_voltage(adc_value[SPANNUNG4]);
 
-		gearbox_temperature = calculate_oil_temperature(adc_value[GETRIEBETEMP], &cal_gearbox_temperature);
+		gearbox_temperature = calculate_gearbox_temperature(adc_value[GETRIEBETEMP]);
 
 		if(gearbox_temperature < 150 && gearbox_temperature > -50){
 			if(max_gearbox_temp < gearbox_temperature){
@@ -718,7 +717,7 @@ void app_task(){
 			}
 		}
 
-		in_temperature = calculate_temperature(adc_value[INNENTEMP], &cal_in_temperature);
+		in_temperature = calculate_in_temperature(adc_value[INNENTEMP]);
 		if(in_temperature < 150 && in_temperature > -50){
 			if(max_in_temp < in_temperature){
 				max_in_temp = in_temperature;
@@ -726,7 +725,7 @@ void app_task(){
 				min_in_temp = in_temperature;
 			}
 		}
-		oil_temperature = calculate_oil_temperature(adc_value[OELTEMP], &cal_oil_temperature);
+		oil_temperature = calculate_oil_temperature(adc_value[OELTEMP]);
 		if(oil_temperature < 150 && oil_temperature > -50){
 			if(max_oil_temp < oil_temperature){
 				max_oil_temp = oil_temperature;
@@ -734,7 +733,7 @@ void app_task(){
 				min_oil_temp = oil_temperature;
 			}
 		}
-		ambient_temperature = calculate_temperature(adc_value[AUSSENTEMP], &cal_ambient_temperature);
+		ambient_temperature = calculate_ambient_temperature(adc_value[AUSSENTEMP]);
 		if(ambient_temperature < 150 && ambient_temperature > -50){
 			if(max_ambient_temp < ambient_temperature){
 				max_ambient_temp = ambient_temperature;

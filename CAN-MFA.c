@@ -60,7 +60,7 @@ volatile uint8_t id420_data[8];
 volatile uint8_t id520_data[8];
 volatile uint8_t id666_data[8];
 volatile uint8_t id667_data[8];
-
+ 
 volatile uint8_t id280_valid;
 volatile uint8_t id288_valid;
 volatile uint8_t id380_valid;

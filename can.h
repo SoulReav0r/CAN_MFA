@@ -8,11 +8,15 @@ typedef union {
 //*/				
 extern uint64_t can_speed_sum;
 extern uint32_t can_speed_cnt;				
+
+#define NO_CAN 1
+#define CAN 0
 				
 void can_init (void) ;	
+void can_init_nocan (void) ;
 void can_normal_id(uint16_t id_tag, uint8_t id_flags, uint8_t mask_type );
 //void can_extended_id(can_ID id_tag, uint8_t id_flags, uint8_t mask_type );
 //uint8_t can_poll_mob(uint8_t mob);
-void can_task(void);
+void can_task_nocan(void);
 
 #endif

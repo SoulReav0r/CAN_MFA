@@ -137,6 +137,7 @@ uint8_t EEMEM cal_in_temperature;
 uint8_t EEMEM cal_consumption;
 uint8_t EEMEM cal_gearbox_temperature;
 uint8_t EEMEM cal_ambient_temperature;
+uint8_t EEMEM cal_can_mode;
 uint8_t cal_k15_delay EEMEM;
 uint8_t cal_k58b_off_val EEMEM;
 uint8_t cal_k58b_on_val EEMEM;
@@ -372,10 +373,20 @@ void avr_init(){
 	adc_init();
 #endif
 //*/	
-	//can_init();
-	uint8_t addr = calculateID("MFA");
-	init_twi_slave(addr);
-	
+	if(eeprom_read_byte(&cal_can_mode) == NO_CAN){
+		can_init_nocan();
+		can_status = 0;
+		//init int 0/1 rising edge
+
+		//init HG int (rising edge)
+
+	}else{
+		can_init();
+		can_status = 0;
+		uint8_t addr = calculateID("MFA");
+		init_twi_slave(addr);
+	}
+
 	dog_spi_init();
 	dog_init();
 	#if VERSION == 2
@@ -471,8 +482,6 @@ int main(void){
 	status = OFF;
 	cli();
 	avr_init();
-	can_init();	
-	can_status = 0;
 	
 	sei();
 	K15_PORT &= ~(1<<K15);

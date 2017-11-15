@@ -86,6 +86,8 @@
 #define PCA_DDR DDRD
 #define DISABLE_PCA PD7
 
+#define MKL_NOCAN 7 // adc7
+
 #else
 #error "Version definition error!"
 #endif
@@ -279,6 +281,7 @@ extern uint8_t EEMEM cal_ambient_temperature;
 extern uint8_t EEMEM cal_k15_delay;
 extern uint8_t EEMEM cal_k58b_off_val;
 extern uint8_t EEMEM cal_k58b_on_val;
+extern uint8_t EEMEM cal_can_mode;
 extern volatile uint16_t avg_timer;
 extern volatile uint16_t k58b_timer;
 extern volatile uint32_t cons_timer;

@@ -47,21 +47,21 @@
 #define MFA_SWITCH_MFA /*PINA6 //*/PINA5
 #define MFA_SWITCH_GND PINA7///*PINA5 //*/PINA6
 
-
 #define PCA_PORT PORTD
 #define PCA_DDR DDRD
 #define DISABLE_PCA PD7
 
 #define MKL_NOCAN 7 // adc7
 
-//Display mode
-#define NAVIGATION		0
-#define SMALL_TEXT		1
-#define MED_TEXT_TOP	2
-#define MED_TEXT_BOT	3
-#define SETTINGS		6
-//#define BIG_TEXT	3
-#define CAN_DATA	4//5
+enum displaymode {
+	NAVIGATION=0,
+	SMALL_TEXT,
+	MED_TEXT_TOP,
+	MED_TEXT_BOT,
+	CAN_DATA,
+	SETTINGS,
+};
+
 // MFA MODE
 #define STARTUP 2
 #define MODE1	0
@@ -92,34 +92,40 @@
 
 
 // display value med
-#define VAL_CUR_SPEED 0
-#define VAL_AVG_SPEED 1
-#define VAL_CUR_CONS 2
-#define VAL_AVG_CONS 3
-#define VAL_VOLTA 4 //2
-#define VAL_VOLTB 5
-#define VAL_VOLTC 6 //2
-#define VAL_VOLTD 7
-#define VAL_ENGT 8 //4
-#define	VAL_OIL 9
-#define VAL_AMBIENT 10 //6
-#define VAL_INT 11
-#define VAL_GEARBXT 12
-#define VAL_TIME 13
-#define VAL_RPM 14
-#define VAL_MANIFOLD 15
-#define VAL_FUEL 16
-#define VAL_RANGE 17 
+enum med_value {
+	 VAL_CUR_SPEED,
+	 VAL_AVG_SPEED,
+	 VAL_CUR_CONS,
+	 VAL_AVG_CONS,
+	 VAL_CONS_START,
+	 VAL_CONS_KM_L_CUR,
+	 VAL_CONS_KM_L_AVG,
+	 VAL_CONS_KM_L_START,
+	 VAL_VOLTA,
+	 VAL_VOLTB,
+	 VAL_VOLTC,
+	 VAL_VOLTD,
+	 VAL_ENGT,
+	 VAL_OIL,
+	 VAL_AMBIENT,
+	 VAL_INT,
+	 VAL_GEARBXT,
+	 VAL_TIME,
+	 VAL_RPM,
+	 VAL_MANIFOLD,
+	 VAL_FUEL,
+	 VAL_RANGE,
+};
 
-// display value small
-#define CAN_VALUES 2
-#define ADC_VALUES 1
-#define STANDARD_VALUES 0
-#define CAN_VALUES2 3
-#define MIN_MAX_VALUES 4
-#define TEMPERATURE_VALUES 5
-#define STARTSTOP 6
-
+enum small_value {
+	CAN_VALUES,
+	ADC_VALUES,
+	STANDARD_VALUES,
+	CAN_VALUES2,
+	MIN_MAX_VALUES,
+	TEMPERATURE_VALUES,
+	STARTSTOP,
+};
 #define LINE_SHIFT_START 128
 
 #define AVG_DIGIT 0x9D
@@ -192,6 +198,8 @@ extern volatile uint16_t cons_delta_timer;
 //extern volatile uint32_t cons_ul[16];
 extern volatile float cons_l_h[2];
 extern volatile float cons_l_h_start;
+extern volatile float cons_km_l[2];
+extern volatile float cons_km_l_start;
 extern volatile float cons_l_100km[2];
 extern volatile float cons_l_100km_start;
 extern volatile int16_t gra_speed; //id380D4

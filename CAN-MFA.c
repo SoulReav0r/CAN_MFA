@@ -85,6 +85,8 @@ volatile uint8_t fuel;	//0-100% or 0-80l
 volatile uint16_t cons_delta_ul;
 volatile uint16_t cons_delta_timer;
 volatile float cons_l_h[2];
+volatile float cons_km_l[2];
+volatile float cons_km_l_start;
 volatile float cons_l_h_start;
 volatile float cons_l_100km[2];
 volatile float cons_l_100km_start;
@@ -383,9 +385,12 @@ void avr_init(){
 		can_init_nocan();
 		can_status = 0;
 		//init int 0/1 rising edge
-
+		EICRA = (1<<ISC11) | (1<<ISC10) | (1<<ISC01) | (1<<ISC00);
 		//init HG int (rising edge)
-
+		EICRB = (1<<ISC41) | (1<<ISC40);
+		//enable
+		EIMSK = (1<<INT4) | (1<<INT1) | (1<<INT0);
+		
 	}else{
 		can_mode = CAN;
 		can_init();
@@ -970,7 +975,7 @@ ISR(INT0_vect){ //SCL -> CONS
 	cons_cnt++;
 }
 
-ISR(INT5_vect){ //EN_ADC1 -> HG
+ISR(INT4_vect){ //EN_ADC1 -> HG
 	hg_cnt++;
 }
 

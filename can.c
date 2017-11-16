@@ -457,6 +457,10 @@ void can_read_data(){
 }
 
 void can_task(void){
+	if(can_mode == NO_CAN){
+		can_task_nocan();
+		return;
+	}
 	if(K15_PIN & (1<<K15)){
 		can_read_data();
 		if(send_can_message){
@@ -549,7 +553,7 @@ void can_task_nocan(void){
 		}
 		if(id288_valid){
 			// [ 0 ] [ eng_temp ] [ status1 ] [ spd ] [spd_gra] [ 5 ] [ 6 ] [ 7 ]
-			id288_data[3] = (uint8_t) ((uint16_t) speed * 4 / 5);
+			id288_data[3] = (uint8_t) ((uint16_t) speed[CUR] * 4 / 5); // TODO: fix calculation
 			id288_valid = 0;
 			can_status |= (1<<ID288);
 		}

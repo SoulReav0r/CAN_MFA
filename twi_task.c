@@ -233,6 +233,9 @@ void clear_tx_data(tx_t tx){
 }
 
 void twi_task(void){
+
+	if(can_mode == NO_CAN) return;
+
 	// process data received
 	if(!i2crxready){
 		i2ctimeout++;

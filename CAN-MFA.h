@@ -3,53 +3,19 @@
 
 #include "calculation.h"
 #include <avr/eeprom.h>
-
+#define NO_CAN 1
+#define CAN 0
 #define MFA_BUTTONS_ACTIVE_LOW 1
-#define VERSION 2
-#if VERSION == 1
-#undef HAVE_MCP_ADC
-#undef HAVE_PWM_BACKLIGHT
-// io
-#define TKML PC7
-#define TKML_PORT PORTC
-#define TKML_PIN PINC
-#define REVERSE_PORT PORTC
-#define REVERSE_PIN PINC
-#define REVERSE_GEAR PC6
-#define K15_PORT PORTE
-#define K15_PIN PINE
-#define K15 PE7
-#define LED_PORT PORTE
-#define LED_DDR DDRE
-#define LED PE2
-#define CAN_PORT PORTD
-#define CAN_DDR DDRD
-#define TX_CAN PD5
-#define RX_CAN PD6
-#define CAN_RS PD7
 
-#define MFA_SWITCH_PIN PINA
-#define MFA_SWITCH_PORT PORTA
-#define MFA_SWITCH_DDR DDRA
-#define MFA_SWITCH_MODE PINA7
-#define MFA_SWITCH_RES PINA6
-#define MFA_SWITCH_MFA PINA5
-//#define MFA_SWITCH_GND PINA7
-
-#define PCA_PORT PORTG
-#define PCA_DDR DDRG
-#define DISABLE_PCA PG0
-
-#elif VERSION == 2 
 #define HAVE_MCP_ADC 1
 #define HAVE_PWM_BACKLIGHT 1
 // io
 #define TKML PC7
 #define TKML_PORT PORTC
 #define TKML_PIN PINC
-#define REVERSE_PORT PORTC
-#define REVERSE_PIN PINC
-#define REVERSE_GEAR PC6
+#define DPLUS_PORT PORTC
+#define DPLUS_PIN PINC
+#define DPLUS PC6
 #define K15_PORT PORTE
 #define K15_PIN PINE
 #define K15 PE7
@@ -87,10 +53,6 @@
 #define DISABLE_PCA PD7
 
 #define MKL_NOCAN 7 // adc7
-
-#else
-#error "Version definition error!"
-#endif
 
 //Display mode
 #define NAVIGATION		0
@@ -282,6 +244,7 @@ extern uint8_t EEMEM cal_k15_delay;
 extern uint8_t EEMEM cal_k58b_off_val;
 extern uint8_t EEMEM cal_k58b_on_val;
 extern uint8_t EEMEM cal_can_mode;
+extern volatile uint8_t mkl;
 extern volatile uint16_t avg_timer;
 extern volatile uint16_t k58b_timer;
 extern volatile uint32_t cons_timer;
@@ -303,6 +266,7 @@ extern volatile uint8_t navigation_status_old;
 extern volatile uint32_t distance_to_next_turn;
 
 extern volatile uint8_t radio_text[AUDIO_STR_LENGTH];
+extern volatile uint8_t can_mode;
 
 extern volatile uint8_t navi_old;
 extern volatile uint16_t timer2_cnt;

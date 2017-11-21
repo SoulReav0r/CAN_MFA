@@ -498,7 +498,7 @@ void can_task(void){
 			can_status |= (1<<ID380);
 		}
 		if(id480_valid){
-			// [ 0 ] [ 1 ] [ cons ] [ cons ] [ 4 ] [ 5 ] [ 6 ] [ 7 ]
+			// [ 0 ] [ mkl ] [ cons ] [ cons ] [ 4 ] [ 5 ] [ 6 ] [ 7 ]
 			can_status |= (1<<ID480);
 			id480_valid = 0;
 		}
@@ -556,6 +556,12 @@ void can_task_nocan(void){
 			id288_data[3] = (uint8_t) ((uint16_t) speed[CUR] * 4 / 5); // TODO: fix calculation
 			id288_valid = 0;
 			can_status |= (1<<ID288);
+		}
+		if(id288_valid){
+			// [ 0 ] [ mkl ] [ verbrauch ] [ verbrauch ] [ 4 ] [ 5 ] [ 6 ] [ 7 ]
+			id480_data[1] = (uint8_t) (mkl?0x04:0x00);
+			id480_valid = 0;
+			can_status |= (1<<ID480);
 		}
 	}
 	else

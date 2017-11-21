@@ -1352,55 +1352,31 @@ void display_task(){
 	 --------------------	*
 	 *						*
 	 */
-	//uint8_t i;
-	/*	modes:
-		NAVIGATION: Musiktitel (16 Zeichen, 8x12)
-					Trennlinie 1x128 px
-					Wert1 (2 Zeilen à 6 Zeichen, 8x12) Navipfeil (32x32px) Wert2 (2 Zeilen à 6 Zeichen, 8x12)
-					Ankunftszeit Entfernung bis nä. Abzwg. Entfernung zum Ziel
-					
-		SMALL_TEXT: Musiktitel (16 Zeichen, 8x12)
-					Trennlinie 1x128 px
-	*/
-
-
 	
-	/*
-	char first_line[18] = {0,};
-	sprintf(first_line, " M:0x%02X V:0x%02X  ", display_mode, display_mode==NAVIGATION?navigation_next_turn:display_value);
-	// " M:0x00 V:0x00 "
-	// "0123456789012345
-	dog_write_mid_string(NEW_POSITION(0,0),first_line);
-	//*/
-	/*
-	if(strlen((char*) radio_text) < 16){
-		uint8_t i;
-		for(i=0; i<16; i++){
-			if(radio_text[i] == 0){
-				radio_text[i] = ' ';
-			}
-		}
-	}
-	//*/
 	if(!(TKML_PIN & (1<<TKML))){
 		//				.012345678901.
-		#if 1
 		char _str[] =	"            ";
 		_str[4] = DOOR;
 		_str[5] = DOOR + 1;
 		_str[6] = DOOR2;
 		dog_write_big_string(NEW_POSITION(0,4),_str);
 		line_shift_timer = LINE_SHIFT_START;
-		#else
-		char _str[30];
-		sprintf(_str, " nnt: %i, ns: %i ", navigation_next_turn, navigation_status);
-		underlined = 1;
-		dog_write_mid_string(NEW_POSITION(0,5), _str);
-		underlined = 0;
-		#endif
 	}else{
 		underlined = 1;
-		dog_write_rotating(NEW_POSITION(0,5),(char*) &radio_text[0], get_text_length((char*) &radio_text[0], sizeof(radio_text)),SIZE8X12,line_shift_timer);
+		if(can_mode==CAN){
+			dog_write_rotating(NEW_POSITION(0,5),(char*) &radio_text[0], get_text_length((char*) &radio_text[0], sizeof(radio_text)),SIZE8X12,line_shift_timer);
+		}else{
+			//				0123456789012345
+			//				 12,3V BB 12,3V
+			char str[17] = "                ";
+			sprint_voltage_precision(&str[1], starterbat, 1);
+			sprint_voltage_precision(&str[10], zweitbat, 1);
+			str[5] = 'V';
+			str[14] = 'V';
+			str[7] = BAT;
+			str[8] = BAT+1;
+			dog_write_mid_string(NEW_POSITION(0,0),str);
+		}
 		underlined = 0;
 	}
 	

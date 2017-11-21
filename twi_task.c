@@ -291,7 +291,7 @@ void twi_task(void){
 	}
 	//prepare data for transmission
 	/*
-	sprintf(val, "%i\n", eeprom_read_byte(&cal_ambient_temperature));
+	sprintf(val, "%i\n\r", eeprom_read_byte(&cal_ambient_temperature));
 	eeprom_write_byte(&cal_ambient_temperature, uart_get_int());
 	//*/
 	//*

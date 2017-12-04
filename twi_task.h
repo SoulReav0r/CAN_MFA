@@ -51,15 +51,18 @@ typedef struct rxdata {
 	uint32_t distance_to_next_turn;
 	char radio_text[AUDIO_STR_LENGTH];
 	uint8_t navigation_next_turn;
+/*
 	uint8_t cal_ambient_temperature;
 	uint8_t cal_voltage;
 	uint8_t cal_oil_temperature;
 	uint8_t cal_consumption;	
 	uint8_t cal_speed;
+*/
 }rx_t;
 	
 typedef struct txdata {
 	uint32_t distance_to_next_turn;
+	/*
 	uint16_t voltage;
 	uint16_t consumption;
 	uint16_t average_consumption;
@@ -67,8 +70,10 @@ typedef struct txdata {
 	uint16_t speed;
 	uint16_t average_speed;
 	int16_t rpm;
+	*/
 	uint8_t radio_text[AUDIO_STR_LENGTH];
 	uint8_t navigation_next_turn;	//navigation active?
+	/*
 	uint8_t cal_ambient_temperature;
 	uint8_t cal_voltage;
 	uint8_t cal_oil_temperature;
@@ -79,6 +84,7 @@ typedef struct txdata {
 	//int8_t water_temperature;
 	int8_t ambient_temperature;
 	int8_t oil_temperature;
+	*/
 	uint8_t dummy;
 }tx_t;
 extern volatile rx_t rx;

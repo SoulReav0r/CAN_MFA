@@ -62,7 +62,7 @@ void display_navi(void){
 		}
 		dog_transmit_data(0x00);
 		dog_transmit_data(0x00);
-		column=position.column + 48;
+		dog_transmit_data(0x00);
 		
 	}
 
@@ -86,21 +86,21 @@ void display_navi(void){
 	
 	if(ambient_temperature < AMBIENT_FROST_TEMP){
 		str1[1] = FROST;
-		str1[1] = FROST + 1;
+		str1[2] = FROST + 1;
 	}
 	
 	sprint_temperature(&str1[3],ambient_temperature);
 	str1[6] = CENTIGRADE;
 
-	dog_write_mid_strings(NEW_POSITION(position.page,position.column + 48), str0, str1);
+	dog_write_mid_strings(NEW_POSITION(position.page,position.column + 47), str0, str1);
 	fill_str(str0, ' ', str_length);
 	fill_str(str1, ' ', str_length);
-	if(distance_to_next_turn<65000){
+	if(distance_to_next_turn<999000){
 		sprint_distance(&str1[1],round_distance(distance_to_next_turn));
 	}else{
 		sprint_temperature(&str1[1], 255);
 	}
-	dog_write_mid_strings(NEW_POSITION(position.page+3,position.column + 48), str0, str1);
+	dog_write_mid_strings(NEW_POSITION(position.page+3,position.column + 47), str0, str1);
 
 	
 	

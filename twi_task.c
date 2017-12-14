@@ -86,11 +86,13 @@ uint8_t serialize_rxdata(uint8_t size, volatile uint8_t buffer[size]){
 		buffer[i + 4] = rx.radio_text[i];
 	}
 	buffer[AUDIO_STR_LENGTH + 4] = rx.navigation_next_turn;
+	/*
 	buffer[AUDIO_STR_LENGTH + 5] = rx.cal_ambient_temperature;
 	buffer[AUDIO_STR_LENGTH + 6] = rx.cal_voltage;
 	buffer[AUDIO_STR_LENGTH + 7] = rx.cal_oil_temperature;
 	buffer[AUDIO_STR_LENGTH + 8] = rx.cal_consumption;
 	buffer[AUDIO_STR_LENGTH + 9] = rx.cal_speed;
+	*/
 	return 1;
 }
 
@@ -109,11 +111,13 @@ uint8_t deserialize_rxdata(uint8_t size, volatile uint8_t buffer[size]){
 		rx.radio_text[i] = buffer[i+4];
 	}
 	rx.navigation_next_turn =	buffer[AUDIO_STR_LENGTH + 4];	
+	/*
 	rx.cal_ambient_temperature =	buffer[AUDIO_STR_LENGTH + 5];
 	rx.cal_voltage =			buffer[AUDIO_STR_LENGTH + 6];
 	rx.cal_oil_temperature =	buffer[AUDIO_STR_LENGTH + 7];
 	rx.cal_consumption =		buffer[AUDIO_STR_LENGTH + 8];
 	rx.cal_speed =				buffer[AUDIO_STR_LENGTH + 9];
+	*/
 	return 1;
 }
 
@@ -149,7 +153,7 @@ uint8_t serialize_txdata(tx_t tx, uint8_t size, volatile uint8_t buffer[size]){
 	buffer[1] = (uint8_t) ((tx.distance_to_next_turn & 0x00FF0000) >> 16);
 	buffer[2] = (uint8_t) ((tx.distance_to_next_turn & 0x0000FF00) >> 8);
 	buffer[3] = (uint8_t) (tx.distance_to_next_turn & 0x000000FF);
-	
+	/*
 	buffer[4] = (uint8_t) ((tx.voltage & 0xFF00) >> 8);
 	buffer[5] = (uint8_t) (tx.voltage & 0x00FF);
 	
@@ -165,11 +169,14 @@ uint8_t serialize_txdata(tx_t tx, uint8_t size, volatile uint8_t buffer[size]){
 	buffer[15] = (uint8_t) (tx.average_speed & 0x00FF);
 	buffer[16] = (uint8_t) ((tx.rpm & 0xFF00) >> 8);
 	buffer[17] = (uint8_t) (tx.rpm & 0x00FF);
-	
+	*/
 	for(i=0;i<AUDIO_STR_LENGTH;i++){
-		buffer[i + 18] = tx.radio_text[i];
+		buffer[i + 4] = tx.radio_text[i];
+		//buffer[i + 18] = tx.radio_text[i];
 	}
-	buffer[AUDIO_STR_LENGTH + 18] = tx.navigation_next_turn;
+	//buffer[AUDIO_STR_LENGTH + 18] = tx.navigation_next_turn;
+	buffer[AUDIO_STR_LENGTH + 4] = tx.navigation_next_turn;
+	/*
 	buffer[AUDIO_STR_LENGTH + 19] = tx.cal_ambient_temperature;
 	buffer[AUDIO_STR_LENGTH + 20] = tx.cal_voltage;
 	buffer[AUDIO_STR_LENGTH + 21] = tx.cal_oil_temperature;
@@ -178,7 +185,7 @@ uint8_t serialize_txdata(tx_t tx, uint8_t size, volatile uint8_t buffer[size]){
 	buffer[AUDIO_STR_LENGTH + 24] = tx.engine_temperature;
 	buffer[AUDIO_STR_LENGTH + 25] = tx.ambient_temperature;
 	buffer[AUDIO_STR_LENGTH + 26] = tx.oil_temperature;
-	
+	*/
 	return 1;
 	
 }

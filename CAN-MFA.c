@@ -477,6 +477,7 @@ int main(void){
 	sei();
 	K15_PORT &= ~(1<<K15);
 	//K15_PORT |= (1<<K15); // zündung an, bitte ;)
+
 	line_shift_timer = LINE_SHIFT_START;
 	display_mode = SMALL_TEXT;
 	display_value[SMALL_TEXT] = STANDARD_VALUES;

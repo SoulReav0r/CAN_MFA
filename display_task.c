@@ -95,7 +95,7 @@ void display_navi(void){
 	dog_write_mid_strings(NEW_POSITION(position.page,position.column + 48), str0, str1);
 	fill_str(str0, ' ', str_length);
 	fill_str(str1, ' ', str_length);
-	if(distance_to_next_turn<65000){
+	if(distance_to_next_turn<999000){
 		sprint_distance(&str1[1],round_distance(distance_to_next_turn));
 	}else{
 		sprint_temperature(&str1[1], 255);

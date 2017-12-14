@@ -51,6 +51,9 @@ typedef struct rxdata {
 	uint32_t distance_to_next_turn;
 	char radio_text[AUDIO_STR_LENGTH];
 	uint8_t navigation_next_turn;
+	//uint8_t dummy0;
+	//uint8_t dummy1;
+	//uint8_t dummy2;
 /*
 	uint8_t cal_ambient_temperature;
 	uint8_t cal_voltage;
@@ -85,7 +88,9 @@ typedef struct txdata {
 	int8_t ambient_temperature;
 	int8_t oil_temperature;
 	*/
-	uint8_t dummy;
+	//uint8_t dummy0;
+	//uint8_t dummy1;
+	//uint8_t dummy2;
 }tx_t;
 extern volatile rx_t rx;
 extern volatile tx_t tx;

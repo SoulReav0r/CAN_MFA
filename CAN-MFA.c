@@ -328,13 +328,13 @@ void io_init(void){
 	// init_twi_slave(calculateID("MFA"));
 	#if VERSION == 2
 	// PORTA:
-	DDRA = (1<<EN_ADC6) | (1<<EN_ADC7) /* | (1<<PA0) | (1<<PA1)*/;
+	DDRA = (1<<EN_ADC6) | (1<<EN_ADC7)  | (1<<PA0) | (1<<PA1);
 	PORTA = 0x00;
 	// PORTB
-	DDRB = 0x00;
+	DDRB = 0xE0;
 	PORTB = 0x00;
 	// PORTC
-	DDRC = (1<<EN3V3) /*| 0x1F*/;
+	DDRC = (1<<EN3V3) | 0x1F;
 	PORTC = 0x00;
 	// PORTD
 	DDRD = (1<<CS_DOG) | (1<<CAN_RS);
@@ -346,7 +346,7 @@ void io_init(void){
 	DDRF = (1<<CS_ADC);
 	PORTF |= (1<<CS_ADC);
 	// PORTG
-	DDRG = 0x00;
+	DDRG = 0xFF;
 	PORTG = 0x00;
 	#else
 	DDRE |= (1<<PE2);
@@ -638,8 +638,8 @@ uint16_t read_adc(uint8_t portbit){
 void read_adc_values(void){
 	
 	int i;
-	adc_value[0] = read_adc(0);
-	for(i=1; i<8;i++){
+	//adc_value[0] = read_adc(0);
+	for(i=0; i<8;i++){
 		//read all adc channels
 		//old_adc_value[i] = adc_value[i];
 		uint16_t temp = (adc_value[i]<<FILTER_VALUE) - adc_value[i];

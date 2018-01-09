@@ -61,6 +61,9 @@
 #define LED PE3
 #define CAN_PORT PORTD
 #define CAN_DDR DDRD
+
+#define SCL PD0
+#define SDA PD1
 #define TX_CAN PD5
 #define RX_CAN PD6
 #define CAN_RS PD7

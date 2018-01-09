@@ -337,7 +337,7 @@ void io_init(void){
 	DDRC = (1<<EN3V3) | 0x1F;
 	PORTC = 0x00;
 	// PORTD
-	DDRD = (1<<CS_DOG) | (1<<CAN_RS);
+	DDRD = (1<<CS_DOG) | (1<<CAN_RS) | (1<<SDA) | (1<<SCL);
 	PORTD = (1<<CS_DOG) | 3;
 	// PORTE
 	PORTE = 0x00;

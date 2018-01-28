@@ -1471,6 +1471,18 @@ void display_task(){
 				display_navi();
 				break;
 			}
+			case TOP_LINE:{
+				uint8_t a=0,b=0,c=2;
+				reversed = reversed==0?1:0;
+				for(a=0;a<6;a++){
+					dog_set_position(a + c,4);
+					for(b=0;b<128; b++){
+						dog_transmit_data(pgm_read_byte(&(sym_t4forum_bmp[a*128 + b])));
+					}
+				}
+				reversed = reversed==0?1:0;
+				break;
+			}
 			case SMALL_TEXT:{
 				display_small_text();
 				break;

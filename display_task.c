@@ -1496,10 +1496,10 @@ void display_task(){
 				break;
 			}
 			case CAN_DATA:{
-				if(can_mode == NO_CAN){
-					display_mode++;
-					break;
-				}
+				//if(can_mode == NO_CAN){
+				//	display_mode++;
+				//	break;
+				//}
 				display_can_data();					
 				break;
 			}

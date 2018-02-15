@@ -258,7 +258,7 @@ void display_small_text(void){
 		}
 		case ADC_VALUES:{
 			if(can_mode == NO_CAN){
-				
+				display_value[SMALL_TEXT]++;
 			}else{
 				if(starterbat.integer == 0 && zweitbat.integer == 0 && (oil_temperature > 300 || oil_temperature < -50) && (ambient_temperature > 200 || ambient_temperature <-50) && v_solar_plus.integer == 0 && v_solar_minus.integer == 0 && (gearbox_temperature > 300 || gearbox_temperature < -50) && (in_temperature > 200 || in_temperature <-50)){
 					display_value[SMALL_TEXT]++;
@@ -418,6 +418,10 @@ void display_small_text(void){
 				break;
 			}
 			case MIN_MAX_VALUES:{
+				if(can_mode == NO_CAN){
+					display_value[SMALL_TEXT]++;
+					break;
+				}
 				// speed, rpm, temperature (eng/oil/out/gearbox)
 				/*	0123456789012345
 					RADIO TEXT
@@ -473,6 +477,10 @@ void display_small_text(void){
 				break;
 			}
 			case TEMPERATURE_VALUES:{
+				if(can_mode == NO_CAN){
+					display_value[SMALL_TEXT]++;
+					break;
+				}
 				// speed, rpm, temperature (eng/oil/out/gearbox)
 				/*	0123456789012345
 					RADIO TEXT
@@ -532,38 +540,7 @@ void display_small_text(void){
 					display_value[SMALL_TEXT]++;
 					break;
 				}
-				/*	0123456789012345
-		     Status
-					----------------
-					123kmh  1200upm  	
-					 XXX  XXX  XXX  
-					et85gc	12gC
-					AC:OFF	12,34V
-				*/  
-				/*
-				switch(status){
-					case START:{		//	012345678901
-						strcpy(status_str, "   START    ");
-						break;
-					}
-					case STOP:{
-						strcpy(status_str, "   STOP     ");
-						break;
-					}
-					case FAHRT:{
-						strcpy(status_str, "   FAHRT    ");
-						break;
-					}
-					case MOTOR_AUS:{
-						strcpy(status_str, " MOTOR AUS  ");
-						break;
-					}
-					case DEAKTIVIERT:{
-						strcpy(status_str, "DEAKTIVIERT ");
-						break;
-					}
-				}
-				*/
+
 				char line1[17] = "                "; 
 				char line2[17] = "                ";
 				char line3[17] = "                ";
@@ -789,7 +766,7 @@ void display_med_row(volatile uint8_t* dv, uint8_t page, uint8_t row){
 			break;
 		}
 		case VAL_VOLTC:{
-			if(v_solar_plus.integer == 0){
+			if(v_solar_plus.integer == 0 || can_mode == NO_CAN){
 				display_value++;
 				break;
 			}
@@ -804,7 +781,7 @@ void display_med_row(volatile uint8_t* dv, uint8_t page, uint8_t row){
 			break;
 		}
 		case VAL_VOLTD:{
-			if(v_solar_minus.integer == 0){
+			if(v_solar_minus.integer == 0 || can_mode == NO_CAN){
 				display_value++;
 				break;
 			}
@@ -819,7 +796,7 @@ void display_med_row(volatile uint8_t* dv, uint8_t page, uint8_t row){
 			break;
 		}
 		case VAL_OIL:{
-			if(oil_temperature > 150 || oil_temperature < -50){
+			if(oil_temperature > 150 || oil_temperature < -50 || can_mode == NO_CAN){
 				display_value++;
 				break;
 			}
@@ -836,7 +813,7 @@ void display_med_row(volatile uint8_t* dv, uint8_t page, uint8_t row){
 			break;
 		}
 		case VAL_ENGT:{
-			if(oil_temperature > 150 || oil_temperature < 25){
+			if(oil_temperature > 150 || oil_temperature < 25 || can_mode == NO_CAN){
 				display_value++;
 				break;
 			}
@@ -874,7 +851,7 @@ void display_med_row(volatile uint8_t* dv, uint8_t page, uint8_t row){
 		}
 		case VAL_GEARBXT:{
 			//*
-			if(gearbox_temperature > 300 && gearbox_temperature < -50){
+			if((gearbox_temperature > 300 && gearbox_temperature < -50) || can_mode == NO_CAN){
 				display_value++;
 				break;
 			}
@@ -1367,6 +1344,10 @@ void display_top_line(void){
 			break;
 		}
 		case TEMPERATURES0:{
+			if(can_mode == NO_CAN){
+				display_value[TOP_LINE]++;
+				break;
+			}
 			// eng temp, oil temp
 			char str[17] = "                ";
 			
@@ -1384,6 +1365,10 @@ void display_top_line(void){
 			break;
 		}
 		case TEMPERATURES1:{
+			if(can_mode == NO_CAN){
+				display_value[TOP_LINE]++;
+				break;
+			}
 			//oil temp, gb temp,
 			char str[17] = "                ";
 			
@@ -1401,6 +1386,10 @@ void display_top_line(void){
 			break;
 		}
 		case TEMPERATURES2:{
+			if(can_mode == NO_CAN){
+				display_value[TOP_LINE]++;
+				break;
+			}
 			// gb temp, eng temp
 			char str[17] = "                ";
 			
@@ -1426,38 +1415,6 @@ void display_top_line(void){
 }
 
 void display_task(){
-
-#if 0
-	if(!(TKML_PIN & (1<<TKML))){
-		//				.012345678901.
-		char _str[] =	"            ";
-		_str[4] = DOOR;
-		_str[5] = DOOR + 1;
-		_str[6] = DOOR2;
-		dog_write_big_string(NEW_POSITION(0,4),_str);
-		line_shift_timer = LINE_SHIFT_START;
-	}else{
-		underlined = 1;
-		if(can_mode==CAN){
-			dog_write_rotating(NEW_POSITION(0,5),(char*) &radio_text[0], get_text_length((char*) &radio_text[0], sizeof(radio_text)),SIZE8X12,line_shift_timer);
-		}else{
-			//				0123456789012345
-			//				 12,3V BB 12,3V
-			char str[17] = "                ";
-			sprint_voltage_precision(&str[1], starterbat, 1);
-			sprint_voltage_precision(&str[10], zweitbat, 1);
-			str[5] = 'V';
-			str[14] = 'V';
-			str[7] = BAT;
-			str[8] = BAT+1;
-			dog_write_mid_string(NEW_POSITION(0,0),str);
-		}
-		underlined = 0;
-	}
-	
-	underlined = 0;
-#endif
-
 	display_top_line();
 	if(display_mode & (1<<SETTINGS)){
 		display_settings();
@@ -1487,19 +1444,18 @@ void display_task(){
 				display_small_text();
 				break;
 			}
-			case MED_TEXT_TOP:{
-				display_med_text();
-				break;
-			}
+			case MED_TEXT_TOP:
 			case MED_TEXT_BOT:{
 				display_med_text();
 				break;
 			}
 			case CAN_DATA:{
+			/*
 				if(can_mode == NO_CAN){
 					display_mode++;
 					break;
 				}
+			//*/
 				display_can_data();					
 				break;
 			}

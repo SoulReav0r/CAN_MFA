@@ -1334,13 +1334,13 @@ void display_top_line(void){
 			//				0123456789012345
 			//				 12,3V BB 12,3V
 			char str[17] = "                ";
-			sprint_voltage_precision(&str[1], starterbat, 1);
-			sprint_voltage_precision(&str[10], zweitbat, 1);
+			sprint_voltage(&str[0], starterbat);
+			sprint_voltage(&str[9], zweitbat);
 			str[5] = 'V';
 			str[14] = 'V';
 			str[7] = BAT;
 			str[8] = BAT+1;
-			dog_write_mid_string(NEW_POSITION(0,0),str);
+			dog_write_mid_string(NEW_POSITION(0,4),str);
 			break;
 		}
 		case TEMPERATURES0:{
@@ -1351,16 +1351,16 @@ void display_top_line(void){
 			// eng temp, oil temp
 			char str[17] = "                ";
 			
-			str[1] = ENGT;
-			str[2] = ENGT + 1;
-			sprint_temperature(&str[3],engine_temperature>25?engine_temperature:200);
-			str[6] = CENTIGRADE;
+			str[2] = ENGT;
+			str[3] = ENGT + 1;
+			sprint_temperature(&str[4],engine_temperature>25?engine_temperature:200);
+			str[7] = CENTIGRADE;
 
-			sprint_temperature(&str[10],oil_temperature);
-			str[13] = CENTIGRADE;
+			sprint_temperature(&str[11],oil_temperature);
+			str[14] = CENTIGRADE;
 
-			str[8] = OILT;
-			str[9] = OILT + 1;
+			str[9] = OILT;
+			str[10] = OILT + 1;
 			dog_write_mid_string(NEW_POSITION(0,0),str);
 			break;
 		}
@@ -1372,16 +1372,16 @@ void display_top_line(void){
 			//oil temp, gb temp,
 			char str[17] = "                ";
 			
-			str[1] = OILT;
-			str[2] = OILT + 1;
-			sprint_temperature(&str[3],oil_temperature);
-			str[6] = CENTIGRADE;
+			str[2] = OILT;
+			str[3] = OILT + 1;
+			sprint_temperature(&str[4],oil_temperature);
+			str[7] = CENTIGRADE;
 
-			sprint_temperature(&str[10],gearbox_temperature);
-			str[13] = CENTIGRADE;
+			sprint_temperature(&str[11],gearbox_temperature);
+			str[14] = CENTIGRADE;
 
-			str[8] = GETRIEBETEMP;
-			str[9] = GETRIEBETEMP + 1;
+			str[9] = GEARBOXT;
+			str[10] = GEARBOXT + 1;
 			dog_write_mid_string(NEW_POSITION(0,0),str);
 			break;
 		}
@@ -1393,21 +1393,21 @@ void display_top_line(void){
 			// gb temp, eng temp
 			char str[17] = "                ";
 			
-			str[1] = GETRIEBETEMP;
-			str[2] = GETRIEBETEMP + 1;
-			sprint_temperature(&str[3],gearbox_temperature);
-			str[6] = CENTIGRADE;
+			str[2] = GEARBOXT;
+			str[3] = GEARBOXT + 1;
+			sprint_temperature(&str[4],gearbox_temperature);
+			str[7] = CENTIGRADE;
 
-			sprint_temperature(&str[10],engine_temperature>25?engine_temperature:200);
-			str[13] = CENTIGRADE;
+			sprint_temperature(&str[11],engine_temperature>25?engine_temperature:200);
+			str[14] = CENTIGRADE;
 
-			str[8] = ENGT;
-			str[9] = ENGT + 1;
+			str[9] = ENGT;
+			str[10] = ENGT + 1;
 			dog_write_mid_string(NEW_POSITION(0,0),str);
 			break;
 		}
 		default:{
-			display_value[TOP_LINE]++;
+			display_value[TOP_LINE]=0;
 			break;
 		}
 	}
